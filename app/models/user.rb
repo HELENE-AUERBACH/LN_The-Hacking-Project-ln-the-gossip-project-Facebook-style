@@ -18,10 +18,10 @@ class User < ApplicationRecord
             length: { minimum: 6 }
   validates_associated :city
   belongs_to :city
-  has_many :gossips, foreign_key: 'author_id', class_name: "Gossip"
-  has_many :sent_messages, foreign_key: 'sender_id', class_name: "PrivateMessage"
-  has_many :join_table_recipient_pms, foreign_key: :recipient_id, class_name: "JoinTableRecipientPm"
+  has_many :gossips, foreign_key: 'author_id', class_name: "Gossip", dependent: :destroy
+  has_many :sent_messages, foreign_key: 'sender_id', class_name: "PrivateMessage", dependent: :destroy
+  has_many :join_table_recipient_pms, foreign_key: :recipient_id, class_name: "JoinTableRecipientPm", dependent: :destroy
   has_many :received_messages, through: :join_table_recipient_pms
-  has_many :comments, foreign_key: 'author_id', class_name: "Comment"
+  has_many :comments, foreign_key: 'author_id', class_name: "Comment", dependent: :destroy
   has_secure_password
 end
