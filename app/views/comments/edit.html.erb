@@ -1,0 +1,41 @@
+<% if !@comment_hash['comment'].nil? %>
+  
+  <h1>Modifie ton commentaire n°<%= @comment_hash['index'] %></h1>
+
+  <% if !@comment.nil? && @comment.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <p>Nous n'avons pas réussi à mettre à jour le commentaire pour la (ou les) raison(s) suivante(s) :</p>
+      <ul>
+        <% @comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <%= form_tag gossip_comment_path(@comment_hash['comment'].gossip.id, @comment_hash['index']), method: "post" do %>
+
+    <input type="hidden" name ="_method" value="put">
+
+    <%= label_tag 'Contenu' %>
+    <%= text_area_tag 'content', (@comment_hash['comment'].content if !@comment_hash['comment'].content.nil?), size: "25x10" %>
+    <br /> <br />
+    
+    <%= submit_tag "Enregistrer cette nouvelle version de ton commentaire" %>
+
+  <% end %>
+
+  <BR>
+  <div>
+    <p>
+      <a href="<%= gossip_comment_path(@comment_hash['comment'].gossip.id, @comment_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Êtes-vous certain de vouloir supprimer définitivement ce commentaire?" data-method="DELETE">Supprimer le commentaire sur le potin</a>
+    </p>
+  </div>
+
+<% else %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Aucun commentaire de n°<%= @comment_hash['index'] %> n'existe dans la base!</p>
+  </div>
+
+<% end %>

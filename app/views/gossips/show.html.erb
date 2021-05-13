@@ -1,0 +1,94 @@
+<style type="text/css">
+  .content {
+    font-style: italic;
+    border-radius: 10px !important;
+    text-indent: 12px !important;
+    width: auto !important;
+    padding: 0px 8px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    font: bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;
+    --color: rgb(255, 255, 255) !important;
+  }
+
+  table {
+    margin:auto;
+  }
+  table,
+  td {
+    border: 1px solid #333;
+  }
+
+  thead,
+  tfoot {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+
+<% if !@gossip_hash['gossip'].nil? %>
+  <h1>Voici la page du potin n°<%= @gossip_hash['index'] %></h1>
+  <BR>
+  <% if !notice.nil? %>
+    <div class="alert alert-success" role="alert">
+      <p id="notice"><%= notice %></p>
+    </div>
+  <% end %>
+  <BR>
+  <div>
+    <p>Son titre : <%= @gossip_hash['gossip'].title %></p>
+    <p>Le contenu du potin : <p class="content"><%= @gossip_hash['gossip'].content %></p></p>
+    <p class="author">Son auteur : <em><%= link_to "#{@gossip_hash['gossip'].author.first_name} #{@gossip_hash['gossip'].author.last_name}", user_path(@gossip_hash['gossip'].author.id) %></em></p>
+    <p class="city">La ville de son auteur : <em><%= link_to "#{@gossip_hash['gossip'].author.city.name} (#{@gossip_hash['gossip'].author.city.zip_code})", city_path(@gossip_hash['gossip'].author.city.id) %></em></p>
+    <p>La date de création du potin : <%= @gossip_hash['gossip'].created_at %></p>
+    <p>La date de dernière modification du potin : <%= @gossip_hash['gossip'].updated_at %></p>
+    <br />
+    <p>
+      <a href="<%= edit_gossip_path(@gossip_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Modifier le potin</a><span>
+      <a href="<%= gossip_path(@gossip_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Êtes-vous certain de vouloir supprimer définitivement ce potin?" data-method="DELETE">Supprimer le potin</a>
+    </p>
+    <br />
+    <div class="comments">
+      <p>Il y a <%= nb_comments = @gossip_hash['gossip'].comments.count %> commentaire(s) lié(s) à ce potin.</p><br />
+      <% if nb_comments > 0 %>
+        <% if nb_comments > 1 %>
+          <p>Les <%= nb_comments %> commentaires liés à ce potin :</p>
+        <% else %>
+          <p>Le seul commentaire lié à ce potin :</p>
+        <% end %>
+        <table>
+          <caption>Voici la liste des commentaires sur ce potin</caption>
+          <thead>
+            <tr>
+              <th>Auteur</th>
+              <th>Texte</th>
+              <th>Lien pour le modifier/supprimer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @gossip_hash['gossip'].comments.each do |comment| %>
+              <tr>
+                <td class="author"><em><%= link_to "#{comment.author.first_name} #{comment.author.last_name}", user_path(comment.author.id) %></em></td>
+                <td class="content"><%= comment.content %></td>
+                <td><%= link_to "Commentaire n°#{comment.id}", edit_gossip_comment_path(@gossip_hash['index'], comment.id) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <br />
+      <% end %>
+      <p>
+        <a href="<%= new_gossip_comment_path(@gossip_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Ajouter un commentaire sur ce potin</a><span>
+      </p>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-danger" role="alert">
+    <p>Aucun potin de n°<%= @gossip_hash['index'] %> n'existe dans la base!</p>
+  </div>
+<% end %>
+<div>
+  <p>
+    <a href="<%= gossips_path %>" class="btn btn-primary btn-sm" role="button">Revenir à la liste des potins</a>
+  </p>
+</div>

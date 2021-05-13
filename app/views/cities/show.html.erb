@@ -1,0 +1,56 @@
+<style type="text/css">
+  table {
+    margin:auto;
+  }
+  table,
+  td {
+    border: 1px solid #333;
+  }
+
+  thead,
+  tfoot {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+
+<% if !@city_hash['city'].nil? %>
+  <h1>Voici la page de la ville n°<%= @city_hash['index'] %></h1>
+  <div>
+    <p>Son nom : <%= @city_hash['city'].name %></p>
+    <p>Son code postal : <%= @city_hash['city'].zip_code %></p>
+    <div class="gossips">
+      <p>Les potins écrits par les utilisateurs associés à cette ville :</p>
+      <table>
+        <caption>Voici la liste des potins écrits par les utilisateurs qui y circulent...</caption>
+        <thead>
+          <tr>
+            <th>Prénom de l'auteur</th>
+            <th>Titre</th>
+            <th>Page</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @city_hash['city'].users.each do |user| %>
+            <% user.gossips.each do |gossip| %>
+              <tr>
+                <td><%= gossip.author.first_name %></td>
+                <td><%= gossip.title %></td>
+                <td><%= link_to "Potin n°#{gossip.id}", gossip_path(gossip.id) %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-danger" role="alert">
+    <p>Aucune ville de n°<%= @city_hash['index'] %> n'existe dans la base!</p>
+  </div>
+<% end %>
+<div>
+  <p>
+    <a href="<%= gossips_path %>" class="btn btn-primary btn-sm" role="button">Revenir à la liste des potins</a>
+  </p>
+</div>
