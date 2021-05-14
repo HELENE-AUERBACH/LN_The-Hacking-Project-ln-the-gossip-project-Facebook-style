@@ -34,7 +34,7 @@ class UsersController < ApplicationController
                      "password" => params[:password],
                      "city" => City.find_by(id: params[:city_id]))
     if @user.save # essaie de sauvegarder en base @user
-      login(@user) # à la création de l'utilisateur, il faut login l'utilisateur.
+      log_in(@user) # à la création de l'utilisateur, il faut login l'utilisateur.
       # si ça marche, il redirige vers la page d'index du site
       redirect_to gossips_path, status: :ok, notice: 'Ton gentil utilisateur a bien été créé en base !'
     else

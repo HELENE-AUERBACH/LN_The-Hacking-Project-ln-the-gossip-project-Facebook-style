@@ -38,7 +38,7 @@
   <br /> <br />
 
   <%= label_tag 'Ville' %>
-  <%= select_tag 'city_id', options_for_select(@cities.collect{ |c| [c.name, c.id] }) %>
+  <%= select_tag 'city_id', options_for_select(City.all.collect{ |c| [c.name, c.id] }) %>
   <br /> <br />
 
   <%= submit_tag "Enregistrer cet utilisateur" %>
