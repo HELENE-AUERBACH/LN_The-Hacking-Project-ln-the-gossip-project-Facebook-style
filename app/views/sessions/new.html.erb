@@ -1,0 +1,37 @@
+<h1>Connexion</h1>
+
+<% if !session.nil? && (params[:email].nil? || params[:email].strip.empty? || params[:password].nil? || params[:password].strip.empty? || params[:password].length < 6) %>
+  <div class="alert alert-danger" role="alert">
+    <p>Nous n'avons pas réussi à te connecter pour la (ou les) raison(s) suivante(s) :</p>
+    <ul>
+      <% if (params[:email].nil? || params[:email].strip.empty?) %>
+        <li>L'e-mail saisi est "vide"</li>
+      <% end %>
+      <% if (params[:password].nil? || params[:password].strip.empty?) %>
+        <li>Le mot de passe saisi est "vide"</li>
+      <% elsif params[:password].length < 6 %>
+        <li>Le mot de passe saisi ne comporte pas un minimum de 6 caractères : il est trop "court"</li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if !notice.nil? %>
+  <div class="alert alert-danger" role="alert">
+    <p id="notice"><%= notice %></p>
+  </div>
+<% end %>
+
+<%= form_tag url_for(action: 'create'), method: "post" do %>
+
+  <%= label_tag 'E-mail' %>
+  <%= text_field_tag 'email', (params[:email] if !params[:email].nil?), size: 50, maxlength: 44 %>
+  <br /> <br />
+
+  <%= label_tag 'Mot de passe' %>
+  <%= text_field_tag 'password', (params[:password] if !params[:password].nil?), size: 50, maxlength: 44 %>
+  <br /> <br />
+
+  <%= submit_tag "Connexion" %>
+
+<% end %>

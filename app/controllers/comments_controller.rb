@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  ANONYMOUS_USER_ID = 1.freeze # Ruby Freeze method basically make object constant or immutable
+  before_action :authenticate_user, only: [:new, :create, :edit, :update, :destroy]
 
   def index
     # Méthode qui récupère tous les commentaires et les envoie à la view index (index.html.erb) pour affichage
@@ -29,7 +29,7 @@ class CommentsController < ApplicationController
     puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
     @comment = Comment.new("content" => params[:content],
                            "gossip" => Gossip.find(params[:gossip_id]),
-                           "author" => User.find(ANONYMOUS_USER_ID))
+                           "author" => current_user)
     if @comment.save # essaie de sauvegarder en base @comment
       # si ça marche, il redirige vers la page d'index du site
       redirect_to gossip_path(params["gossip_id"]), status: :ok, notice: 'Ton super commentaire a bien été créé en base pour la postérité !'
@@ -60,7 +60,7 @@ class CommentsController < ApplicationController
     if !params[:content].nil?
       comment_saved = @comment.update("content" => params[:content], # essaie de sauvegarder en base @comment
                                       "gossip" => Gossip.find(params[:gossip_id]),
-                                      "author" => User.find(ANONYMOUS_USER_ID))
+                                      "author" => current_user)
       if comment_saved
         # si ça a marché, il redirige vers la méthode index
         ok = true

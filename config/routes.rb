@@ -3,11 +3,12 @@ Rails.application.routes.draw do
   resources :gossips do
     resources :comments, except: [:show]
   end
-  resources :users, only: [:show] do
-    resources :private_messages, only: [:show]
+  resources :users do
+    resources :private_messages, except: [:show]
   end
   resources :cities, only: [:show]
   resources :tags, only: [:show]
+  resources :sessions, only: [:new, :create, :destroy]
   get '/team', to: 'static#team'
   get '/contact', to: 'static#contact'
   get 'welcome/:first_name', to: 'welcome#show'

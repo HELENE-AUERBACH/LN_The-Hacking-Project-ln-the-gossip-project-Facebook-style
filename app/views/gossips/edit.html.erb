@@ -1,4 +1,4 @@
-<% if !@gossip_hash['gossip'].nil? %>
+<% if !@gossip_hash['gossip'].nil? && logged_in? && current_user.id == @gossip_hash['gossip'].author.id  %>
   
   <h1>Modifie ton potin n°<%= @gossip_hash['index'] %></h1>
 
@@ -29,10 +29,16 @@
 
   <% end %>
 
-<% else %>
+<% elsif @gossip_hash['gossip'].nil? %>
 
   <div class="alert alert-danger" role="alert">
     <p>Aucun potin de n°<%= @gossip_hash['index'] %> n'existe dans la base!</p>
+  </div>
+
+<% else %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Tu n'es pas l'auteur de ce potin de n°<%= @gossip_hash['index'] %> : tu n'es donc pas autorisé à le modifier en base!</p>
   </div>
 
 <% end %>

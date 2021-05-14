@@ -1,5 +1,5 @@
 class GossipsController < ApplicationController
-  ANONYMOUS_USER_ID = 1.freeze # Ruby Freeze method basically make object constant or immutable
+  before_action :authenticate_user, only: [:new, :create, :edit, :update, :destroy, :show]
 
   def index
     # Méthode qui récupère tous les potins et les envoie à la view index (index.html.erb) pour affichage
@@ -30,7 +30,7 @@ class GossipsController < ApplicationController
     puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
     @gossip = Gossip.new("title" => params[:title],
                          "content" => params[:content],
-                         "author" => User.find(ANONYMOUS_USER_ID))
+                         "author" => current_user)
     if @gossip.save # essaie de sauvegarder en base @gossip
       # si ça marche, il redirige vers la page d'index du site
       #redirect_to action: :index
@@ -63,7 +63,7 @@ class GossipsController < ApplicationController
     if !params[:title].nil? && !params[:content].nil?
       gossip_saved = @gossip.update("title" => params[:title], # essaie de sauvegarder en base gossip
                                     "content" => params[:content],
-                                    "author" => User.find(ANONYMOUS_USER_ID))
+                                    "author" => current_user)
       if gossip_saved
         # si ça a marché, il redirige vers la méthode index
         ok = true

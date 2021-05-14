@@ -1,4 +1,4 @@
-<% if !@comment_hash['comment'].nil? %>
+<% if !@comment_hash['comment'].nil? && logged_in? && current_user.id == @comment_hash['comment'].author.id %>
   
   <h1>Modifie ton commentaire n°<%= @comment_hash['index'] %></h1>
 
@@ -32,10 +32,16 @@
     </p>
   </div>
 
-<% else %>
+<% elsif @comment_hash['comment'].nil? %>
 
   <div class="alert alert-danger" role="alert">
     <p>Aucun commentaire de n°<%= @comment_hash['index'] %> n'existe dans la base!</p>
+  </div>
+
+<% else %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Tu n'es pas l'auteur de ce commentaire de n°<%= @comment_hash['index'] %> : tu n'es donc pas autorisé à le modifier en base!</p>
   </div>
 
 <% end %>

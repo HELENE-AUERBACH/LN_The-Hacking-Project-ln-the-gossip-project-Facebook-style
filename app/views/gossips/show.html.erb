@@ -43,10 +43,12 @@
     <p>La date de création du potin : <%= @gossip_hash['gossip'].created_at %></p>
     <p>La date de dernière modification du potin : <%= @gossip_hash['gossip'].updated_at %></p>
     <br />
-    <p>
-      <a href="<%= edit_gossip_path(@gossip_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Modifier le potin</a><span>
-      <a href="<%= gossip_path(@gossip_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Êtes-vous certain de vouloir supprimer définitivement ce potin?" data-method="DELETE">Supprimer le potin</a>
-    </p>
+    <% if logged_in? && current_user.id == @gossip_hash['gossip'].author.id %>
+      <p>
+        <a href="<%= edit_gossip_path(@gossip_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Modifier le potin</a><span>
+        <a href="<%= gossip_path(@gossip_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Êtes-vous certain de vouloir supprimer définitivement ce potin?" data-method="DELETE">Supprimer le potin</a>
+      </p>
+    <% end %>
     <br />
     <div class="comments">
       <p>Il y a <%= nb_comments = @gossip_hash['gossip'].comments.count %> commentaire(s) lié(s) à ce potin.</p><br />
@@ -62,7 +64,9 @@
             <tr>
               <th>Auteur</th>
               <th>Texte</th>
-              <th>Lien pour le modifier/supprimer</th>
+              <% if logged_in? %>
+                <th>Lien pour le modifier/supprimer</th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +74,11 @@
               <tr>
                 <td class="author"><em><%= link_to "#{comment.author.first_name} #{comment.author.last_name}", user_path(comment.author.id) %></em></td>
                 <td class="content"><%= comment.content %></td>
-                <td><%= link_to "Commentaire n°#{comment.id}", edit_gossip_comment_path(@gossip_hash['index'], comment.id) %></td>
+                <td>
+                  <% if logged_in? && current_user.id == comment.author.id %>
+                    <%= link_to "Commentaire n°#{comment.id}", edit_gossip_comment_path(@gossip_hash['index'], comment.id) %>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
